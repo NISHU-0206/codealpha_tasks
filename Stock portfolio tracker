@@ -1,0 +1,144 @@
+import requests
+import json
+import os
+
+# Replace with your own Alpha Vantage API key
+API_KEY = 'your_alpha_vantage_api_key'
+BASE_URL = 'https://www.alphavantage.co/query'
+
+# Function to get the current stock price from Alpha Vantage
+def get_stock_price(symbol):
+    url = f"{BASE_URL}?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval=1min&apikey={API_KEY}"
+    response = requests.get(url)
+    data = response.json()
+
+    if "Time Series (1min)" in data:
+        latest_time = next(iter(data["Time Series (1min)"]))
+        latest_data = data["Time Series (1min)"][latest_time]
+        return float(latest_data["4. close"])
+    else:
+        print(f"Error fetching data for {symbol}: {data.get('Note', 'No data available')}")
+        return None
+
+# Class to manage the stock portfolio
+class StockPortfolio:
+    def __init__(self, portfolio_file='portfolio.json'):
+        self.portfolio_file = portfolio_file
+        self.portfolio = self.load_portfolio()
+
+    def load_portfolio(self):
+        if os.path.exists(self.portfolio_file):
+            with open(self.portfolio_file, 'r') as file:
+                return json.load(file)
+        return {}
+
+    def save_portfolio(self):
+        with open(self.portfolio_file, 'w') as file:
+            json.dump(self.portfolio, file)
+
+    def add_stock(self, symbol, quantity, purchase_price):
+        if symbol in self.portfolio:
+            self.portfolio[symbol]['quantity'] += quantity
+        else:
+            self.portfolio[symbol] = {'quantity': quantity, 'purchase_price': purchase_price}
+        self.save_portfolio()
+
+    def remove_stock(self, symbol, quantity):
+        if symbol in self.portfolio:
+            if self.portfolio[symbol]['quantity'] >= quantity:
+                self.portfolio[symbol]['quantity'] -= quantity
+                if self.portfolio[symbol]['quantity'] == 0:
+                    del self.portfolio[symbol]
+                self.save_portfolio()
+            else:
+                print(f"Error: Not enough {symbol} in the portfolio to remove.")
+        else:
+            print(f"Error: {symbol} not found in portfolio.")
+
+    def get_stock_value(self, symbol):
+        price = get_stock_price(symbol)
+        if price:
+            quantity = self.portfolio[symbol]['quantity']
+            return price * quantity
+        return None
+
+    def track_performance(self):
+        performance = {}
+        total_value = 0
+        total_invested = 0
+        for symbol, data in self.portfolio.items():
+            price = get_stock_price(symbol)
+            if price:
+                current_value = price * data['quantity']
+                invested_amount = data['purchase_price'] * data['quantity']
+                performance[symbol] = {
+                    'current_value': current_value,
+                    'invested_amount': invested_amount,
+                    'gain_loss': current_value - invested_amount
+                }
+                total_value += current_value
+                total_invested += invested_amount
+
+        performance['total'] = {
+            'current_value': total_value,
+            'invested_amount': total_invested,
+            'gain_loss': total_value - total_invested
+        }
+
+        return performance
+
+    def display_performance(self):
+        performance = self.track_performance()
+        for symbol, data in performance.items():
+            if symbol != 'total':
+                print(f"{symbol}: Current Value = ${data['current_value']:.2f}, "
+                      f"Invested Amount = ${data['invested_amount']:.2f}, "
+                      f"Gain/Loss = ${data['gain_loss']:.2f}")
+        total = performance['total']
+        print(f"Total Portfolio: Current Value = ${total['current_value']:.2f}, "
+              f"Invested Amount = ${total['invested_amount']:.2f}, "
+              f"Total Gain/Loss = ${total['gain_loss']:.2f}")
+
+
+# Function to display the menu options
+def display_menu():
+    print("\nStock Portfolio Tracker")
+    print("1. Add Stock")
+    print("2. Remove Stock")
+    print("3. Track Portfolio Performance")
+    print("4. Exit")
+
+
+# Main function to run the portfolio tracker
+def main():
+    portfolio = StockPortfolio()
+
+    while True:
+        display_menu()
+        choice = input("Choose an option: ")
+
+        if choice == '1':
+            symbol = input("Enter stock symbol (e.g., AAPL): ").upper()
+            quantity = int(input("Enter quantity of shares: "))
+            purchase_price = float(input("Enter purchase price per share: "))
+            portfolio.add_stock(symbol, quantity, purchase_price)
+            print(f"Added {quantity} shares of {symbol} to your portfolio.")
+
+        elif choice == '2':
+            symbol = input("Enter stock symbol to remove (e.g., AAPL): ").upper()
+            quantity = int(input("Enter quantity of shares to remove: "))
+            portfolio.remove_stock(symbol, quantity)
+
+        elif choice == '3':
+            portfolio.display_performance()
+
+        elif choice == '4':
+            print("Exiting the portfolio tracker.")
+            break
+
+        else:
+            print("Invalid option. Please try again.")
+
+
+if __name__ == "__main__":
+    main()
