@@ -1,16 +1,16 @@
 # Stock Portfolio Tracker  
 
-A Python-based **Stock Portfolio Tracker** that allows users to monitor stock performance, track investments, and analyze portfolio trends in real time.  
+A Python-based **Stock Portfolio Tracker** that helps users monitor stock performance, track investments, and analyze portfolio trends using real-time data from **Yahoo Finance API** or **Alpha Vantage API**.  
 
 ## Features  
-- Add and manage stocks in a portfolio  
-- Fetch real-time stock prices using an API  
-- Calculate profit/loss and track performance  
-- View historical trends and data visualization  
-- User-friendly interface  
+- **Add and manage stocks** in a portfolio  
+- **Fetch real-time stock prices** via API  
+- **Calculate profit/loss** based on market updates  
+- **Visualize stock trends** using charts  
+- **Export data** for future reference  
 
 ## Technologies Used  
 - **Python**  
-- **Requests (for fetching stock data)**  
-- **Pandas (for data processing)**  
-- **Matplotlib / Plotly (for visualizations)**  
+- **Yahoo Finance (`yfinance`) / Alpha Vantage (`requests`)**  
+- **Pandas** (for data handling)  
+- **Matplotlib / Plotly** (for visualization)  
