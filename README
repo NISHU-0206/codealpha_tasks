@@ -1,16 +1,51 @@
-# Stock Portfolio Tracker  
+# 🧠 Python Mini Projects Bundle
 
-A Python-based **Stock Portfolio Tracker** that helps users monitor stock performance, track investments, and analyze portfolio trends using real-time data from **Yahoo Finance API** or **Alpha Vantage API**.  
+This repository contains a collection of three Python projects designed to showcase core programming concepts, logic building, and real-world utility.
 
-## Features  
-- **Add and manage stocks** in a portfolio  
-- **Fetch real-time stock prices** via API  
-- **Calculate profit/loss** based on market updates  
-- **Visualize stock trends** using charts  
-- **Export data** for future reference  
+## 📁 Included Projects
 
-## Technologies Used  
-- **Python**  
-- **Yahoo Finance (`yfinance`) / Alpha Vantage (`requests`)**  
-- **Pandas** (for data handling)  
-- **Matplotlib / Plotly** (for visualization)  
+### 🎮 Hangman Game
+
+A classic word guessing game where the player tries to guess a secret word letter by letter within a limited number of attempts. It's a fun way to practice control flow, string manipulation, and basic game logic in Python.
+
+> **Features:**
+- Random word selection
+- ASCII art representation
+- Win/lose conditions
+- Replayable game loop
+
+---
+
+### 🤖 Chatbot
+
+A basic rule-based chatbot built with Python that simulates simple conversation. It responds to predefined inputs and demonstrates how natural language inputs can be processed.
+
+> **Features:**
+- Basic NLP logic
+- Predefined responses
+- Continuous conversation loop
+- Easy to extend or customize
+
+---
+
+### 📈 Stock Portfolio Tracker
+
+A terminal-based Python app to track and display the current value of your stock portfolio. It fetches real-time stock data and calculates your total portfolio worth.
+
+> **Features:**
+- Real-time stock data fetching (e.g., using APIs or mock data)
+- Portfolio value calculation
+- Simple and interactive CLI interface
+- Easy to modify for custom portfolios
+
+---
+
+## ✅ Requirements
+
+- Python 3.x
+- `requests`, `yfinance`, or similar (for the stock tracker)
+- No external dependencies for Hangman or Chatbot
+
+You can install any required packages with:
+```bash
+pip install -r requirements.txt
